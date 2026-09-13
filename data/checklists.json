@@ -1,0 +1,310 @@
+{
+  "_meta": {
+    "note": "This checklist is an educational and portfolio project tool. It is not certified or approved as an active clinical decision-support system, and is based on published clinical guidelines rather than direct validation by a licensed medical specialist.",
+    "version": "1.0"
+  },
+  "chest_pain": [
+    {
+      "field_name": "onset_and_duration",
+      "display_name": "Onset and Duration of Pain",
+      "priority": "HIGH",
+      "keywords": [
+        "acute onset",
+        "started minutes ago",
+        "duration",
+        "gradual onset",
+        "time of onset",
+        "onset prior to arrival"
+      ],
+      "rationale": "Determines the acuity of potential myocardial ischemia and dictates eligibility for time-sensitive reperfusion interventions such as PCI or thrombolysis.",
+      "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
+    },
+    {
+      "field_name": "pain_character",
+      "display_name": "Pain Character and Quality",
+      "priority": "HIGH",
+      "keywords": [
+        "pressure",
+        "crushing",
+        "squeezing",
+        "heaviness",
+        "tightness",
+        "sharp/pleuritic"
+      ],
+      "rationale": "Helps distinguish ischemic cardiac pain (typically described as heavy pressure or squeezing) from non-ischemic causes like pleuritic, musculoskeletal, or esophageal pain.",
+      "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
+    },
+    {
+      "field_name": "pain_radiation",
+      "display_name": "Pain Radiation Pattern",
+      "priority": "HIGH",
+      "keywords": [
+        "radiation to left arm",
+        "radiating to jaw",
+        "radiation to neck",
+        "radiation to shoulder",
+        "back radiation",
+        "no radiation"
+      ],
+      "rationale": "Radiation to the left arm, both arms, neck, or jaw significantly increases the likelihood ratio for acute coronary syndrome (ACS).",
+      "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
+    },
+    {
+      "field_name": "associated_anginal_symptoms",
+      "display_name": "Associated Anginal Equivalents",
+      "priority": "HIGH",
+      "keywords": [
+        "diaphoresis",
+        "dyspnea",
+        "SOB",
+        "nausea/vomiting",
+        "syncope",
+        "lightheadedness"
+      ],
+      "rationale": "Symptoms like sweating, shortness of breath, and nausea frequently serve as anginal equivalents, particularly in diabetic, female, and elderly patients.",
+      "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
+    },
+    {
+      "field_name": "vital_signs",
+      "display_name": "Hemodynamic Vital Signs",
+      "priority": "HIGH",
+      "keywords": [
+        "blood pressure",
+        "BP",
+        "heart rate",
+        "HR",
+        "pulse",
+        "O2 saturation"
+      ],
+      "rationale": "Essential for identifying acute hemodynamic compromise, cardiogenic shock, hypertensive crisis, or profound hypoxia requiring immediate resuscitation.",
+      "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
+    },
+    {
+      "field_name": "ecg_findings",
+      "display_name": "12-Lead Electrocardiogram (ECG/EKG)",
+      "priority": "HIGH",
+      "keywords": [
+        "ECG",
+        "EKG",
+        "ST elevation",
+        "STEMI",
+        "T-wave inversion",
+        "ST depression"
+      ],
+      "rationale": "The initial 12-lead ECG is mandatory within 10 minutes of presentation to rule in or out acute STEMI and guide immediate reperfusion pathways.",
+      "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
+    },
+    {
+      "field_name": "cardiac_biomarkers",
+      "display_name": "Cardiac Biomarkers (Troponin)",
+      "priority": "HIGH",
+      "keywords": [
+        "troponin",
+        "hs-cTn",
+        "cTnI",
+        "cTnT",
+        "cardiac enzymes",
+        "serial troponins"
+      ],
+      "rationale": "Objective measurement of high-sensitivity cardiac troponin is required to confirm or exclude acute myocardial injury and non-ST-elevation myocardial infarction (NSTEMI).",
+      "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
+    },
+    {
+      "field_name": "provocative_and_palliative_factors",
+      "display_name": "Provoking and Relieving Factors",
+      "priority": "MEDIUM",
+      "keywords": [
+        "exertional pain",
+        "relieved by rest",
+        "worse with exertion",
+        "nitroglycerin relief",
+        "NTG",
+        "pleuritic variation"
+      ],
+      "rationale": "Pain reliably brought on by exertion and relieved by rest or sublingual nitroglycerin strongly supports a classic myocardial ischemic etiology.",
+      "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
+    },
+    {
+      "field_name": "cardiovascular_risk_factors",
+      "display_name": "Cardiovascular Risk Factors",
+      "priority": "MEDIUM",
+      "keywords": [
+        "hypertension",
+        "HTN",
+        "diabetes mellitus",
+        "DM",
+        "smoking history",
+        "hyperlipidemia"
+      ],
+      "rationale": "Essential for calculating pre-test risk stratification scores (e.g., HEART score), although individual risk factors do not rule ACS in or out acutely.",
+      "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
+    },
+    {
+      "field_name": "prior_cardiac_history",
+      "display_name": "Prior Cardiovascular History",
+      "priority": "MEDIUM",
+      "keywords": [
+        "coronary artery disease",
+        "CAD",
+        "prior MI",
+        "PCI",
+        "stent",
+        "CABG"
+      ],
+      "rationale": "Known history of atherosclerotic cardiovascular disease or revascularization places the patient in a markedly higher pre-test probability category for recurrent ischemic events.",
+      "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
+    }
+  ],
+  "headache": [
+    {
+      "field_name": "sudden_thunderclap_onset",
+      "display_name": "Sudden or Thunderclap Onset",
+      "priority": "HIGH",
+      "keywords": [
+        "thunderclap",
+        "sudden onset",
+        "peaked in seconds",
+        "worst headache of life",
+        "abrupt onset",
+        "maximal at onset"
+      ],
+      "rationale": "A split-second or rapidly peaking headache is the primary clinical warning sign for aneurysmal subarachnoid hemorrhage (SAH), necessitating emergency non-contrast CT and possible LP.",
+      "guideline_ref": "SNNOOP10 Headache Red Flags, 2018"
+    },
+    {
+      "field_name": "fever_and_meningismus",
+      "display_name": "Fever and Neck Stiffness (Meningismus)",
+      "priority": "HIGH",
+      "keywords": [
+        "fever",
+        "neck stiffness",
+        "nuchal rigidity",
+        "Kernig sign",
+        "Brudzinski sign",
+        "meningismus"
+      ],
+      "rationale": "Headache accompanied by fever and nuchal rigidity signals central nervous system infection (meningitis or encephalitis) requiring emergent CSF analysis and empiric antimicrobial therapy.",
+      "guideline_ref": "SNNOOP10 Headache Red Flags, 2018"
+    },
+    {
+      "field_name": "focal_neurological_deficits",
+      "display_name": "Focal Neurologic Deficits & Mental Status",
+      "priority": "HIGH",
+      "keywords": [
+        "focal deficit",
+        "hemiparesis",
+        "cranial nerve palsy",
+        "speech difficulty",
+        "altered mental status",
+        "confusion"
+      ],
+      "rationale": "Focal motor, sensory, or cognitive abnormalities point directly toward acute intracranial pathology such as ischemic stroke, intracranial hemorrhage, or space-occupying lesions.",
+      "guideline_ref": "SNNOOP10 Headache Red Flags, 2018"
+    },
+    {
+      "field_name": "papilledema_and_visual_loss",
+      "display_name": "Papilledema and Fundoscopic Examination",
+      "priority": "HIGH",
+      "keywords": [
+        "papilledema",
+        "optic disc swelling",
+        "fundoscopy",
+        "diplopia",
+        "visual field defect",
+        "blurred vision"
+      ],
+      "rationale": "Optic disc edema indicates increased intracranial pressure (ICP) resulting from space-occupying lesions, cerebral venous sinus thrombosis, or idiopathic intracranial hypertension.",
+      "guideline_ref": "SNNOOP10 Headache Red Flags, 2018"
+    },
+    {
+      "field_name": "systemic_disease_and_immunosuppression",
+      "display_name": "Systemic Disease (Cancer or Immunosuppression)",
+      "priority": "HIGH",
+      "keywords": [
+        "history of cancer",
+        "malignancy",
+        "immunocompromised",
+        "HIV",
+        "immunosuppressive therapy",
+        "metastatic disease"
+      ],
+      "rationale": "Patients with cancer or compromised immune systems are at elevated risk for cerebral metastases, brain abscesses, and opportunistic CNS infections.",
+      "guideline_ref": "SNNOOP10 Headache Red Flags, 2018"
+    },
+    {
+      "field_name": "age_of_onset",
+      "display_name": "New Onset Age Over 50 Years",
+      "priority": "MEDIUM",
+      "keywords": [
+        "age > 50",
+        "onset after 50",
+        "new headache in elderly",
+        "temporal tenderness",
+        "jaw claudication",
+        "first headache late in life"
+      ],
+      "rationale": "New or distinct headaches beginning after age 50 require evaluation for secondary causes, particularly giant cell (temporal) arteritis and structural brain lesions.",
+      "guideline_ref": "SNNOOP10 Headache Red Flags, 2018"
+    },
+    {
+      "field_name": "pattern_change_and_progression",
+      "display_name": "Pattern Change or Progression",
+      "priority": "MEDIUM",
+      "keywords": [
+        "progressive worsening",
+        "pattern change",
+        "increasing frequency",
+        "escalating severity",
+        "new headache phenotype",
+        "refractory to usual treatment"
+      ],
+      "rationale": "A progressive escalation in headache severity or a marked shift from an established primary headache pattern suggests the emergence of a secondary underlying cause.",
+      "guideline_ref": "SNNOOP10 Headache Red Flags, 2018"
+    },
+    {
+      "field_name": "positional_or_valsalva_features",
+      "display_name": "Positional or Valsalva-Induced Features",
+      "priority": "MEDIUM",
+      "keywords": [
+        "orthostatic headache",
+        "worse upright",
+        "worse lying down",
+        "cough headache",
+        "valsalva headache",
+        "bending forward worsens"
+      ],
+      "rationale": "Headache provoked or worsened by posture changes, coughing, or straining suggests intracranial hypotension (CSF leak) or raised pressure / posterior fossa pathology.",
+      "guideline_ref": "SNNOOP10 Headache Red Flags, 2018"
+    },
+    {
+      "field_name": "analgesic_medication_overuse",
+      "display_name": "Analgesic Overuse History",
+      "priority": "MEDIUM",
+      "keywords": [
+        "medication overuse",
+        "daily NSAID use",
+        "triptan overuse",
+        "opioid intake",
+        "rebound headache",
+        "analgesic frequency"
+      ],
+      "rationale": "Frequent or chronic use of acute migraine or analgesic medications frequently leads to medication overuse headache (MOH) and complicates treatment.",
+      "guideline_ref": "ICHD-3 / SNNOOP10, 2018"
+    },
+    {
+      "field_name": "pregnancy_or_puerperium",
+      "display_name": "Pregnancy or Puerperium Status",
+      "priority": "MEDIUM",
+      "keywords": [
+        "pregnancy",
+        "pregnant",
+        "postpartum",
+        "puerperium",
+        "preeclampsia",
+        "trimester"
+      ],
+      "rationale": "Pregnancy and the postpartum window introduce heightened risks of life-threatening conditions like preeclampsia/eclampsia, cerebral venous thrombosis, and pituitary apoplexy.",
+      "guideline_ref": "SNNOOP10 Headache Red Flags, 2018"
+    }
+  ]
+}
