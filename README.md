@@ -4,13 +4,17 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![Pytest](https://img.shields.io/badge/Pytest-9%20Passed-009688?style=flat-square&logo=pytest&logoColor=white)](https://docs.pytest.org/)
+[![Pytest](https://img.shields.io/badge/Pytest-12%20Passed-009688?style=flat-square&logo=pytest&logoColor=white)](https://docs.pytest.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Deterministic%20%7C%20Zero--Inference-success?style=flat-square)]()
 
 **An evidence-based clinical documentation integrity engine that audits free-text medical records against authoritative clinical society guidelines to detect documentation omissions without diagnosing patients.**
 
-[Features](#key-capabilities) • [Guidelines](#codified-clinical-guidelines) • [Scoring Engine](#audit--scoring-methodology) • [Architecture](#system-architecture) • [Quickstart](#quickstart) • [Live Demo](#interactive-dashboard)
+[Features](#key-capabilities) • [Guidelines](#codified-clinical-guidelines) • [Scoring Engine](#audit--scoring-methodology) • [Architecture](#system-architecture) • [Quickstart](#quickstart)
+
+<br/>
+
+![Clarity Clinical Documentation Integrity Auditor Interface](assets/clarity_dashboard.png)
 
 </div>
 
@@ -215,6 +219,14 @@ Or run an audit on a single sample clinical note:
 
 ```bash
 python src/analyzer.py
+```
+
+### 5. Run Ground-Truth Benchmark Evaluation
+
+Validate the clinical extraction engine against curated physician ground-truth annotations across 60 clinical checkpoints:
+
+```bash
+python -m src.evaluate
 ```
 
 ---
