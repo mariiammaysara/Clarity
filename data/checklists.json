@@ -10,11 +10,11 @@
       "priority": "HIGH",
       "keywords": [
         "acute onset",
-        "started minutes ago",
+        "started ... ago",
+        "began ... prior to",
+        "hours ago",
         "duration",
-        "gradual onset",
-        "time of onset",
-        "onset prior to arrival"
+        "time of onset"
       ],
       "rationale": "Determines the acuity of potential myocardial ischemia and dictates eligibility for time-sensitive reperfusion interventions such as PCI or thrombolysis.",
       "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"
@@ -114,12 +114,12 @@
       "display_name": "Provoking and Relieving Factors",
       "priority": "MEDIUM",
       "keywords": [
-        "exertional pain",
-        "relieved by rest",
         "worse with exertion",
-        "nitroglycerin relief",
-        "NTG",
-        "pleuritic variation"
+        "relieved by rest",
+        "relief with nitroglycerin",
+        "minimal relief",
+        "walking up stairs",
+        "nitroglycerin relief"
       ],
       "rationale": "Pain reliably brought on by exertion and relieved by rest or sublingual nitroglycerin strongly supports a classic myocardial ischemic etiology.",
       "guideline_ref": "2021 AHA/ACC Chest Pain Guideline"

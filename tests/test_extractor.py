@@ -56,3 +56,46 @@ def test_extract_fields_detects_missing_status_on_absent_text() -> None:
     troponin_res = results_by_name["cardiac_biomarkers"]
     assert troponin_res.status == "missing"
     assert troponin_res.matched_keyword is None
+
+
+def test_extract_fields_matches_onset_time_phrases() -> None:
+    """Verifies that phrases describing onset time fulfill the 'Onset and Duration of Pain' criterion."""
+    fields = load_checklist("chest_pain")
+    onset_field = [f for f in fields if f.field_name == "onset_and_duration"]
+
+    test_notes = [
+        ("Discomfort started 3 hours ago after lunch.", "started ... ago"),
+        ("Chest pressure began 45 minutes prior to presentation.", "began ... prior to"),
+        ("Patient reports acute onset substernal heaviness.", "acute onset"),
+        ("Symptom onset was 2 hours ago.", "hours ago"),
+    ]
+
+    for note, description in test_notes:
+        results = extract_fields(note, onset_field)
+        assert len(results) == 1
+        res = results[0]
+        assert res.field_name == "onset_and_duration"
+        assert res.status == "found", f"Failed for phrasing '{description}' in note: {note}"
+        assert res.matched_keyword is not None
+
+
+def test_extract_fields_matches_relieving_and_provoking_factors() -> None:
+    """Verifies that medication responses and exertion triggers fulfill Provoking and Relieving Factors."""
+    fields = load_checklist("chest_pain")
+    factor_field = [f for f in fields if f.field_name == "provocative_and_palliative_factors"]
+
+    test_notes = [
+        ("Patient had partial relief with nitroglycerin sublingually.", "relief with nitroglycerin"),
+        ("Took two aspirins with minimal relief.", "minimal relief"),
+        ("Pain occurs when walking up stairs.", "walking up stairs"),
+        ("Patient notes symptoms are worse with exertion.", "worse with exertion"),
+    ]
+
+    for note, description in test_notes:
+        results = extract_fields(note, factor_field)
+        assert len(results) == 1
+        res = results[0]
+        assert res.field_name == "provocative_and_palliative_factors"
+        assert res.status == "found", f"Failed for phrasing '{description}' in note: {note}"
+        assert res.matched_keyword is not None
+

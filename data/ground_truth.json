@@ -1,0 +1,74 @@
+{
+  "cp_complete": {
+    "onset_and_duration": "found",
+    "pain_character": "found",
+    "pain_radiation": "found",
+    "associated_anginal_symptoms": "found",
+    "vital_signs": "found",
+    "ecg_findings": "found",
+    "cardiac_biomarkers": "found",
+    "provocative_and_palliative_factors": "found",
+    "cardiovascular_risk_factors": "found",
+    "prior_cardiac_history": "found"
+  },
+  "cp_incomplete": {
+    "onset_and_duration": "found",
+    "pain_character": "found",
+    "pain_radiation": "missing",
+    "associated_anginal_symptoms": "missing",
+    "vital_signs": "missing",
+    "ecg_findings": "missing",
+    "cardiac_biomarkers": "missing",
+    "provocative_and_palliative_factors": "found",
+    "cardiovascular_risk_factors": "missing",
+    "prior_cardiac_history": "missing"
+  },
+  "cp_negated": {
+    "onset_and_duration": "missing",
+    "pain_character": "missing",
+    "pain_radiation": "negated",
+    "associated_anginal_symptoms": "negated",
+    "vital_signs": "missing",
+    "ecg_findings": "missing",
+    "cardiac_biomarkers": "missing",
+    "provocative_and_palliative_factors": "negated",
+    "cardiovascular_risk_factors": "missing",
+    "prior_cardiac_history": "negated"
+  },
+  "ha_complete": {
+    "sudden_thunderclap_onset": "found",
+    "fever_and_meningismus": "found",
+    "focal_neurological_deficits": "found",
+    "papilledema_and_visual_loss": "negated",
+    "systemic_disease_and_immunosuppression": "negated",
+    "age_of_onset": "missing",
+    "pattern_change_and_progression": "missing",
+    "positional_or_valsalva_features": "found",
+    "analgesic_medication_overuse": "missing",
+    "pregnancy_or_puerperium": "missing"
+  },
+  "ha_incomplete": {
+    "sudden_thunderclap_onset": "missing",
+    "fever_and_meningismus": "missing",
+    "focal_neurological_deficits": "negated",
+    "papilledema_and_visual_loss": "missing",
+    "systemic_disease_and_immunosuppression": "missing",
+    "age_of_onset": "missing",
+    "pattern_change_and_progression": "missing",
+    "positional_or_valsalva_features": "missing",
+    "analgesic_medication_overuse": "missing",
+    "pregnancy_or_puerperium": "missing"
+  },
+  "ha_negated": {
+    "sudden_thunderclap_onset": "missing",
+    "fever_and_meningismus": "negated",
+    "focal_neurological_deficits": "negated",
+    "papilledema_and_visual_loss": "negated",
+    "systemic_disease_and_immunosuppression": "negated",
+    "age_of_onset": "missing",
+    "pattern_change_and_progression": "missing",
+    "positional_or_valsalva_features": "missing",
+    "analgesic_medication_overuse": "negated",
+    "pregnancy_or_puerperium": "missing"
+  }
+}

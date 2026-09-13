@@ -19,6 +19,7 @@ documentation and explicit negation, preventing false positives when clinicians
 document that a red flag or symptom was absent.
 """
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -29,6 +30,44 @@ try:
 except ImportError:
     from checklist import ChecklistField, load_checklist
     from negation import is_negated
+
+
+# Domain-specific regex patterns for clinical parameters with variable linguistic structure
+FIELD_REGEX_PATTERNS: dict[str, list[re.Pattern[str]]] = {
+    "onset_and_duration": [
+        # "started ... ago" (e.g., started 2 hours ago, started yesterday morning ago)
+        re.compile(r"\bstarted\b.{1,60}?\bago\b", re.IGNORECASE),
+        # "began ... prior to" (e.g., began 3 hours prior to arrival)
+        re.compile(r"\bbegan\b.{1,60}?\bprior to\b", re.IGNORECASE),
+        # "hours ago", "minutes ago", "days ago"
+        re.compile(r"\b(?:\w+\s+)?(?:hours?|hrs?|minutes?|mins?|days?)\s+ago\b", re.IGNORECASE),
+        # "acute onset", "gradual onset", "sudden onset"
+        re.compile(r"\b(?:acute|gradual|sudden)\s+onset\b", re.IGNORECASE),
+        # "time of onset", "onset prior to"
+        re.compile(r"\b(?:time of onset|onset prior to)\b", re.IGNORECASE),
+        # duration phrases: "2 hours duration", "duration of 3 hours"
+        re.compile(r"\b(?:\w+\s+)?(?:hours?|hrs?|minutes?|mins?|days?)\s+duration\b", re.IGNORECASE),
+        re.compile(r"\bduration of\b", re.IGNORECASE),
+        # temporal onset anchors: "since yesterday", "since this morning"
+        re.compile(r"\b(?:onset|started|began|since)\s+(?:yesterday|this morning|last night)\b", re.IGNORECASE),
+    ],
+    "provocative_and_palliative_factors": [
+        # medication response: "relief with nitroglycerin", "nitroglycerin relief", "relief with aspirin"
+        re.compile(r"\brelief with (?:nitroglycerin|ntg|aspirin|medications?|meds)\b", re.IGNORECASE),
+        re.compile(r"\b(?:nitroglycerin|ntg|aspirin)\s+relief\b", re.IGNORECASE),
+        # "minimal relief", "partial relief", "no relief", "complete relief"
+        re.compile(r"\b(?:minimal|partial|no|mild|moderate|complete|temporary)\s+relief\b", re.IGNORECASE),
+        # "relieved by ...", "relieved with ..."
+        re.compile(r"\brelieved\s+(?:by|with|after)\b", re.IGNORECASE),
+        # exertion triggers: "walking up stairs", "climbing stairs", "worse with exertion"
+        re.compile(r"\bwalking\s+(?:up\s+)?stairs\b", re.IGNORECASE),
+        re.compile(r"\bclimbing\s+stairs\b", re.IGNORECASE),
+        re.compile(r"\bworse\s+with\s+(?:exertion|activity|walking|exercise|movement|stairs)\b", re.IGNORECASE),
+        re.compile(r"\b(?:exertional|exertion)\s*(?:pain|chest pain|angina|discomfort)?\b", re.IGNORECASE),
+        re.compile(r"\bpain\s+(?:on|with)\s+(?:exertion|exercise|walking)\b", re.IGNORECASE),
+        re.compile(r"\bpleuritic\s+variation\b", re.IGNORECASE),
+    ],
+}
 
 
 @dataclass
@@ -54,9 +93,9 @@ def extract_fields(
 ) -> list[ExtractionResult]:
     """Extracts presence or negation of checklist fields from clinical note text.
 
-    Performs case-insensitive search for keywords defined in each ChecklistField.
-    Matching halts upon the first matched keyword per field, which is then evaluated
-    by the negation detection heuristic.
+    Combines domain-specific regex pattern evaluation with case-insensitive
+    keyword search for clinical elements. Evaluates matched occurrences using
+    clinical negation detection.
 
     Args:
         note_text: Raw clinical note text string.
@@ -73,13 +112,67 @@ def extract_fields(
     for field in fields:
         match_found = False
 
+        # 1. Specialized regex pattern evaluation for complex clinical phrasing
+        patterns = FIELD_REGEX_PATTERNS.get(field.field_name, [])
+        for pattern in patterns:
+            match = pattern.search(note_text)
+            if match:
+                start_idx = match.start()
+                end_idx = match.end()
+                matched_str = match.group(0)
+
+                # Extract surrounding snippet for auditability / report evidence
+                ctx_start = max(0, start_idx - context_window)
+                ctx_end = min(len(note_text), end_idx + context_window)
+
+                snippet = note_text[ctx_start:ctx_end].replace("\n", " ").strip()
+                if ctx_start > 0:
+                    snippet = f"...{snippet}"
+                if ctx_end < len(note_text):
+                    snippet = f"{snippet}..."
+
+                negated = is_negated(note_text, start_idx)
+                status = "negated" if negated else "found"
+
+                results.append(
+                    ExtractionResult(
+                        field_name=field.field_name,
+                        status=status,
+                        matched_keyword=matched_str,
+                        matched_context=snippet,
+                    )
+                )
+                match_found = True
+                break
+
+        if match_found:
+            continue
+
+        # 2. Checklist keyword search (supports 'word ... word' ellipsis patterns & exact substring)
         for kw in field.keywords:
-            kw_lower = kw.lower()
-            start_idx = lower_note.find(kw_lower)
+            start_idx = -1
+            end_idx = -1
+            matched_str = kw
+
+            if "..." in kw:
+                parts = [re.escape(p.strip()) for p in kw.split("...") if p.strip()]
+                if len(parts) == 2:
+                    ellipsis_pattern = re.compile(
+                        rf"\b{parts[0]}\b.{{1,60}}?\b{parts[1]}\b", re.IGNORECASE
+                    )
+                    m = ellipsis_pattern.search(note_text)
+                    if m:
+                        start_idx = m.start()
+                        end_idx = m.end()
+                        matched_str = m.group(0)
+            else:
+                kw_lower = kw.lower()
+                start_idx = lower_note.find(kw_lower)
+                if start_idx != -1:
+                    end_idx = start_idx + len(kw_lower)
 
             if start_idx != -1:
                 match_found = True
-                end_idx = start_idx + len(kw_lower)
 
                 # Extract surrounding snippet for auditability / report evidence
                 ctx_start = max(0, start_idx - context_window)
@@ -99,7 +192,7 @@ def extract_fields(
                     ExtractionResult(
                         field_name=field.field_name,
                         status=status,
-                        matched_keyword=kw,
+                        matched_keyword=matched_str,
                         matched_context=snippet,
                     )
                 )

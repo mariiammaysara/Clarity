@@ -47,10 +47,9 @@ SHADCN_DARK_CSS = """
         letter-spacing: -0.02em !important;
     }
 
-    /* Hide Streamlit dev header and status bar during presentations */
-    header[data-testid="stHeader"], header {
-        visibility: hidden !important;
-        height: 0 !important;
+    /* Hide Streamlit management overlays during demo & presentations */
+    #MainMenu, footer, header, .viewerBadge_container__1QSob, [data-testid="stStatusWidget"] {
+        display: none !important;
     }
 
     /* Container Spacing */
@@ -58,6 +57,12 @@ SHADCN_DARK_CSS = """
         padding-top: 1.6rem !important;
         padding-bottom: 4rem !important;
         max-width: 1320px !important;
+    }
+
+    /* Full-width KPI grid alignment */
+    .kpi-grid, div[data-testid="stHorizontalBlock"] {
+        width: 100% !important;
+        gap: 12px !important;
     }
 
     /* Single Unified Glass Card for Left Control Panel */
@@ -349,7 +354,7 @@ def main() -> None:
                     unsafe_allow_html=True,
                 )
 
-            # KPI Metric Cards
+            # KPI Metric Cards (Full Width Grid aligning seamlessly with the alert banner above)
             total_fields = (
                 len(report.missing_high)
                 + len(report.missing_medium)
@@ -357,13 +362,27 @@ def main() -> None:
                 + len(report.present_fields)
             )
 
-            m1, m2, m3, m4 = st.columns(4)
-            m1.metric("Completeness", f"{report.completeness_score}%")
-            m2.metric("Critical Gaps", f"{len(report.missing_high)} / {total_fields}")
-            m3.metric("Medium Gaps", f"{len(report.missing_medium)} / {total_fields}")
-            m4.metric("Documented / Negated", f"{len(report.present_fields)} / {len(report.negated_fields)}")
-
-            st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+            kpi_html = f"""
+            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; gap: 12px; margin-bottom: 20px;">
+                <div style="background: #0d121f; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 14px 18px; box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.4); box-sizing: border-box; width: 100%;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">Completeness</div>
+                    <div style="font-size: 1.55rem; font-weight: 700; color: #f8fafc; letter-spacing: -0.03em;">{report.completeness_score}%</div>
+                </div>
+                <div style="background: #0d121f; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 14px 18px; box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.4); box-sizing: border-box; width: 100%;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">Critical Gaps</div>
+                    <div style="font-size: 1.55rem; font-weight: 700; color: #f8fafc; letter-spacing: -0.03em;">{len(report.missing_high)} / {total_fields}</div>
+                </div>
+                <div style="background: #0d121f; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 14px 18px; box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.4); box-sizing: border-box; width: 100%;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">Medium Gaps</div>
+                    <div style="font-size: 1.55rem; font-weight: 700; color: #f8fafc; letter-spacing: -0.03em;">{len(report.missing_medium)} / {total_fields}</div>
+                </div>
+                <div style="background: #0d121f; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 14px 18px; box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.4); box-sizing: border-box; width: 100%;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">Documented / Negated</div>
+                    <div style="font-size: 1.55rem; font-weight: 700; color: #f8fafc; letter-spacing: -0.03em;">{len(report.present_fields)} / {len(report.negated_fields)}</div>
+                </div>
+            </div>
+            """
+            st.markdown(kpi_html, unsafe_allow_html=True)
 
             # Detailed Findings Columns
             col_gaps, col_coverage = st.columns(2, gap="medium")
@@ -388,8 +407,8 @@ def main() -> None:
                                     <span style="font-weight: 600; font-size: 0.86rem; color: #f8fafc;">{item.display_name}</span>
                                     <span style="font-size: 0.65rem; font-weight: 600; color: #fca5a5; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.25); padding: 1px 6px; border-radius: 4px;">HIGH</span>
                                 </div>
-                                <div style="font-size: 0.79rem; color: #94a3b8; line-height: 1.45; margin-bottom: 6px;">{item.rationale}</div>
-                                <div style="font-size: 0.71rem; color: #7dd3fc; font-family: 'JetBrains Mono', monospace;">Ref: {item.guideline_ref}</div>
+                                <div style="font-size: 0.79rem; color: #cbd5e1; line-height: 1.45; margin-bottom: 6px;">{item.rationale}</div>
+                                <div style="font-size: 0.72rem; color: #cbd5e1; font-family: 'JetBrains Mono', monospace; font-weight: 500;">Ref: {item.guideline_ref}</div>
                             </div>
                             """,
                             unsafe_allow_html=True,
@@ -423,8 +442,8 @@ def main() -> None:
                                     <span style="font-weight: 600; font-size: 0.86rem; color: #f8fafc;">{item.display_name}</span>
                                     <span style="font-size: 0.65rem; font-weight: 600; color: #fcd34d; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.25); padding: 1px 6px; border-radius: 4px;">MED</span>
                                 </div>
-                                <div style="font-size: 0.79rem; color: #94a3b8; line-height: 1.45; margin-bottom: 6px;">{item.rationale}</div>
-                                <div style="font-size: 0.71rem; color: #7dd3fc; font-family: 'JetBrains Mono', monospace;">Ref: {item.guideline_ref}</div>
+                                <div style="font-size: 0.79rem; color: #cbd5e1; line-height: 1.45; margin-bottom: 6px;">{item.rationale}</div>
+                                <div style="font-size: 0.72rem; color: #cbd5e1; font-family: 'JetBrains Mono', monospace; font-weight: 500;">Ref: {item.guideline_ref}</div>
                             </div>
                             """,
                             unsafe_allow_html=True,
@@ -512,6 +531,9 @@ def main() -> None:
     st.markdown(
         """
         <style>
+            .clarity-footer {
+                display: block !important;
+            }
             .clarity-footer a {
                 color: #94a3b8 !important;
                 text-decoration: none !important;
@@ -521,7 +543,7 @@ def main() -> None:
                 color: #f8fafc !important;
             }
         </style>
-        <footer class="clarity-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.08); margin-top: 3.5rem; padding-top: 1.25rem;">
+        <div class="clarity-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.08); margin-top: 3.5rem; padding-top: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
                 <div style="font-size: 0.78rem; color: #94a3b8;">
                     Benchmark Standards: AHA/ACC Chest Pain Guidelines &bull; SNNOOP10 Headache Criteria
@@ -534,7 +556,7 @@ def main() -> None:
             <div style="font-size: 0.75rem; color: #64748b; line-height: 1.5;">
                 For research and clinical documentation integrity audit only. Evaluates documentation completeness and does not formulate diagnostic or triage decisions.
             </div>
-        </footer>
+        </div>
         """,
         unsafe_allow_html=True,
     )
