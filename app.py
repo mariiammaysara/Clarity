@@ -47,9 +47,10 @@ SHADCN_DARK_CSS = """
         letter-spacing: -0.02em !important;
     }
 
-    /* Remove default Streamlit header bar visual noise */
-    header[data-testid="stHeader"] {
-        background: transparent !important;
+    /* Hide Streamlit dev header and status bar during presentations */
+    header[data-testid="stHeader"], header {
+        visibility: hidden !important;
+        height: 0 !important;
     }
 
     /* Container Spacing */
@@ -296,7 +297,7 @@ def main() -> None:
         note_text = st.text_area(
             "Clinical Note Input",
             value=st.session_state.get("note_input", ""),
-            height=320,
+            height=265,
             label_visibility="collapsed",
             placeholder="Type or paste free-text clinical note here, or choose a benchmark fixture from the left panel...",
         )
@@ -512,19 +513,12 @@ def main() -> None:
         """
         <style>
             .clarity-footer a {
-                color: #64748b !important;
+                color: #94a3b8 !important;
                 text-decoration: none !important;
                 transition: color 0.15s ease !important;
             }
             .clarity-footer a:hover {
                 color: #f8fafc !important;
-            }
-            .clarity-footer a svg {
-                fill: #64748b;
-                transition: fill 0.15s ease, transform 0.15s ease;
-            }
-            .clarity-footer a:hover svg {
-                fill: #f8fafc !important;
             }
         </style>
         <footer class="clarity-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.08); margin-top: 3.5rem; padding-top: 1.25rem;">
@@ -532,13 +526,9 @@ def main() -> None:
                 <div style="font-size: 0.78rem; color: #94a3b8;">
                     Benchmark Standards: AHA/ACC Chest Pain Guidelines &bull; SNNOOP10 Headache Criteria
                 </div>
-                <div style="display: inline-flex; align-items: center; gap: 10px; font-size: 0.78rem; color: #64748b;">
+                <div style="display: inline-flex; align-items: center; font-size: 0.78rem; color: #64748b;">
                     <span>Clarity Engine v1.0 &bull; Research Build</span>
-                    <a href="https://github.com/mariiammaysara/Clarity" target="_blank" rel="noopener noreferrer" title="View Repository on GitHub" style="display: inline-flex; align-items: center; gap: 4px;">
-                        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" style="display: inline-block; vertical-align: middle;">
-                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-                        </svg>
-                    </a>
+                    <a href="https://github.com/mariiammaysara/Clarity" target="_blank" rel="noopener noreferrer" style="color: #94a3b8; text-decoration: none; margin-left: 12px; font-weight: 500;">GitHub ↗</a>
                 </div>
             </div>
             <div style="font-size: 0.75rem; color: #64748b; line-height: 1.5;">
@@ -552,3 +542,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
