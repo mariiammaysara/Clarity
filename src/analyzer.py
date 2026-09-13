@@ -3,18 +3,18 @@ Clarity - Clinical Documentation Analyzer & Report Generator.
 
 ARCHITECTURE & INTEGRATION:
 This module integrates the checklist knowledge base (checklist.py) with the
-extraction engine (extractor.py) to assess clinical note completeness.
-It classifies missing fields by clinical urgency (HIGH vs. MEDIUM) and calculates
-a weighted documentation completeness score.
+extraction engine (extractor.py) and negation detection (negation.py) to assess
+clinical note completeness.
 
-CRITICAL CLINICAL & TECHNICAL CONTEXT:
-- All analysis results must be interpreted within the context of the keyword
-  matcher's documented limitation regarding negation (see extractor.py).
-- Items flagged as "Documented" may include negated symptoms (e.g., "denies chest pain")
-  acting as false positives for symptom presence, though indicating documentation
-  that the symptom was evaluated.
-- This tool evaluates DOCUMENTATION COMPLETENESS ONLY; it does not diagnose or
-  provide clinical recommendations.
+STATUS CLASSIFICATION:
+- Documented (Found): Clinical element is documented and present (adds to completeness score).
+- Negated: Clinical element is explicitly documented as absent or denied (does NOT add to
+  completeness score, but is tracked separately from omitted items).
+- Missing: Clinical element is not documented at all (categorized as HIGH or MEDIUM priority).
+
+NOTE:
+This tool evaluates DOCUMENTATION COMPLETENESS ONLY; it does not diagnose or
+provide clinical recommendations.
 """
 
 from dataclasses import dataclass
@@ -55,13 +55,15 @@ class AnalysisReport:
         condition: Clinical presentation evaluated (e.g., 'chest_pain').
         missing_high: List of missing critical/high-priority documentation elements.
         missing_medium: List of missing medium-priority documentation elements.
-        present_fields: Display names of successfully documented clinical fields.
+        negated_fields: Display names of fields explicitly documented as denied/absent.
+        present_fields: Display names of affirmatively documented clinical fields.
         completeness_score: Weighted completeness percentage (0.0 to 100.0).
     """
 
     condition: str
     missing_high: list[MissingItem]
     missing_medium: list[MissingItem]
+    negated_fields: list[str]
     present_fields: list[str]
     completeness_score: float
 
@@ -70,8 +72,10 @@ def analyze_note(note_text: str, condition: str) -> AnalysisReport:
     """Analyzes a clinical note against the specified condition's medical checklist.
 
     Calculates a weighted completeness score where:
-    - HIGH priority fields documented = 2 points each
-    - MEDIUM priority fields documented = 1 point each
+    - HIGH priority fields documented as present ('found') = 2 points each
+    - MEDIUM priority fields documented as present ('found') = 1 point each
+    - Fields documented as absent ('negated') = 0 points (tracked separately in report)
+    - Missing fields = 0 points
     Score is normalized as a percentage of total possible points (0.0 to 100.0).
 
     Args:
@@ -79,7 +83,7 @@ def analyze_note(note_text: str, condition: str) -> AnalysisReport:
         condition: The condition key to validate against (e.g., 'chest_pain', 'headache').
 
     Returns:
-        An AnalysisReport detailing missing items, present items, and the weighted score.
+        An AnalysisReport detailing missing items, negated items, present items, and score.
 
     Raises:
         ValueError: If condition is unknown or checklist loading fails.
@@ -93,6 +97,7 @@ def analyze_note(note_text: str, condition: str) -> AnalysisReport:
 
     missing_high: list[MissingItem] = []
     missing_medium: list[MissingItem] = []
+    negated_fields: list[str] = []
     present_fields: list[str] = []
 
     earned_points = 0.0
@@ -103,9 +108,12 @@ def analyze_note(note_text: str, condition: str) -> AnalysisReport:
         total_possible_points += weight
 
         result = extraction_map.get(field.field_name)
-        if result and result.found:
+        if result and result.status == "found":
             earned_points += weight
             present_fields.append(field.display_name)
+        elif result and result.status == "negated":
+            # Explicitly documented as absent: separated from missing and present
+            negated_fields.append(field.display_name)
         else:
             missing_item = MissingItem(
                 field_name=field.field_name,
@@ -128,6 +136,7 @@ def analyze_note(note_text: str, condition: str) -> AnalysisReport:
         condition=condition,
         missing_high=missing_high,
         missing_medium=missing_medium,
+        negated_fields=negated_fields,
         present_fields=present_fields,
         completeness_score=score,
     )
@@ -143,7 +152,12 @@ def format_report(report: AnalysisReport) -> str:
         A multiline formatted string suitable for console display.
     """
     condition_title = report.condition.replace("_", " ").title()
-    total_fields = len(report.missing_high) + len(report.missing_medium) + len(report.present_fields)
+    total_fields = (
+        len(report.missing_high)
+        + len(report.missing_medium)
+        + len(report.negated_fields)
+        + len(report.present_fields)
+    )
 
     lines: list[str] = [
         "=" * 80,
@@ -173,6 +187,13 @@ def format_report(report: AnalysisReport) -> str:
     else:
         lines.append("  None -- fully documented\n")
 
+    lines.append(f"[~] NEGATED (explicitly documented as absent) ({len(report.negated_fields)} items):")
+    if report.negated_fields:
+        lines.append(f"  {', '.join(report.negated_fields)}")
+    else:
+        lines.append("  None")
+    lines.append("")
+
     lines.append(f"[+] DOCUMENTED ({len(report.present_fields)}/{total_fields} fields):")
     if report.present_fields:
         lines.append(f"  {', '.join(report.present_fields)}")
@@ -183,7 +204,7 @@ def format_report(report: AnalysisReport) -> str:
     lines.append("=" * 80)
     lines.append(
         "NOTE: Evaluation is limited to documentation completeness. "
-        "Negated findings may be counted as documented."
+        "Negated findings indicate documented absence."
     )
     lines.append("=" * 80)
 
@@ -191,12 +212,24 @@ def format_report(report: AnalysisReport) -> str:
 
 
 if __name__ == "__main__":
-    # Test Note 1 (Affirmative clinical documentation from extractor.py)
+    # Test Note 1: Affirmative clinical documentation
     note_text = (
         "Patient presents with acute pressure sensation. "
         "Reports crushing chest pain with radiation to left arm since 2 hours ago. "
         "Complains of diaphoresis and nausea."
     )
 
+    print("--- ANALYSIS FOR AFFIRMATIVE NOTE ---")
     report = analyze_note(note_text, condition="chest_pain")
     print(format_report(report))
+
+    # Test Note 2: Negated clinical documentation
+    note_negated = (
+        "Patient denies chest pain radiation. "
+        "Denies radiation to left arm or jaw. "
+        "Patient is without diaphoresis, shortness of breath, or palpitations."
+    )
+
+    print("\n--- ANALYSIS FOR NEGATED NOTE ---")
+    report_negated = analyze_note(note_negated, condition="chest_pain")
+    print(format_report(report_negated))

@@ -49,7 +49,7 @@ SAMPLE_NOTES: list[dict[str, Any]] = [
             "epigastric discomfort but specifically denies radiation to left arm or jaw. "
             "Patient is without diaphoresis, dyspnea, or exertional pain. No prior MI or known CAD."
         ),
-        "expected_note": "Should demonstrate negation false-positives: rule-based matcher flags radiation, diaphoresis, and CAD as documented.",
+        "expected_note": "With negation detection, denied items (radiation, diaphoresis, CAD) are recognized as negated, preserving a realistic low score.",
     },
     {
         "id": "ha_complete",
@@ -85,7 +85,7 @@ SAMPLE_NOTES: list[dict[str, Any]] = [
             "Fundoscopy confirms no papilledema or optic disc swelling. No history of cancer, "
             "and patient denies daily NSAID use."
         ),
-        "expected_note": "Should demonstrate negation false-positives: negative red flags are marked as documented.",
+        "expected_note": "With negation detection, explicitly denied red flags are correctly flagged as negated instead of present.",
     },
 ]
 
@@ -118,18 +118,19 @@ if __name__ == "__main__":
     except ImportError:
         from analyzer import analyze_note
 
-    print("=" * 85)
-    print("CLARITY - SAMPLE CLINICAL NOTES EVALUATION MATRIX")
-    print("=" * 85)
-    print(f"{'ID':<16} | {'Condition':<12} | {'Score':<8} | {'Documented':<12} | Label")
-    print("-" * 85)
+    print("=" * 95)
+    print("CLARITY - SAMPLE CLINICAL NOTES EVALUATION MATRIX (WITH NEGATION DETECTION)")
+    print("=" * 95)
+    print(f"{'ID':<15} | {'Condition':<11} | {'Score':<7} | {'Doc':<4} | {'Neg':<4} | {'Miss(H/M)':<9} | Label")
+    print("-" * 95)
 
     for note in SAMPLE_NOTES:
         report = analyze_note(note["note_text"], condition=note["condition"])
-        total_fields = len(report.missing_high) + len(report.missing_medium) + len(report.present_fields)
-        doc_count = f"{len(report.present_fields)}/{total_fields}"
+        doc = len(report.present_fields)
+        neg = len(report.negated_fields)
+        miss = f"{len(report.missing_high)}H/{len(report.missing_medium)}M"
         print(
-            f"{note['id']:<16} | {note['condition']:<12} | {report.completeness_score:>5.1f}% | {doc_count:<12} | {note['label']}"
+            f"{note['id']:<15} | {note['condition']:<11} | {report.completeness_score:>5.1f}% | {doc:>4} | {neg:>4} | {miss:<9} | {note['label']}"
         )
 
-    print("=" * 85)
+    print("=" * 95)

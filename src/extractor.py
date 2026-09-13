@@ -1,36 +1,34 @@
 """
-Clarity - Clinical Note Keyword Extractor.
+Clarity - Clinical Note Keyword & Negation Extractor.
 
 ARCHITECTURE & DESIGN RATIONALE:
-This module implements a deterministic, rule-based keyword matching algorithm
-to identify whether clinical documentation elements from a ChecklistField
-are mentioned within a raw clinical note.
+This module implements rule-based keyword matching combined with localized
+pre-negation detection (via negation.py) to assess whether clinical documentation
+elements are documented as present (found), explicitly denied (negated),
+or absent (missing).
 
-CRITICAL KNOWN LIMITATION - NEGATION UNAWARENESS:
-- This is NOT an LLM, transformer, or clinical Named Entity Recognition (NER) model.
-- It performs direct case-insensitive substring searching without syntactic parsing.
-- Consequently, negated statements (e.g., "denies chest pain", "no radiation",
-  "patient is without SOB or diaphoresis") will be flagged as FOUND (True)
-  because the target keywords exist in the text.
-- In clinical documentation integrity (CDI), recording the absence of a symptom
-  is often valid documentation that the physician inquired about the symptom.
-  However, this simple matcher cannot differentiate between affirmation,
-  negation, or family history.
+STATUS CATEGORIES:
+- "found": Target keyword detected without an active preceding negation trigger.
+- "negated": Target keyword detected, but preceded by a clinical negation trigger
+  (e.g., "denies", "no", "without") within the same sentence/clause.
+- "missing": No matching keyword for this field was identified in the text.
 
-FUTURE WORK / EXTENSION POINTS:
-- Integration of a clinical negation detection algorithm (such as NegEx or ConText).
-- Upgrading to biomedical transformer-based NER (e.g., BioClinicalBERT).
+HEURISTIC EXTENSION:
+Unlike simple substring search, this module differentiates between affirmative
+documentation and explicit negation, preventing false positives when clinicians
+document that a red flag or symptom was absent.
 """
 
 from dataclasses import dataclass
-import sys
 from pathlib import Path
 
-# Support running directly (python src/extractor.py) or as part of a package
+# Support running directly or as part of a package
 try:
     from src.checklist import ChecklistField, load_checklist
+    from src.negation import is_negated
 except ImportError:
     from checklist import ChecklistField, load_checklist
+    from negation import is_negated
 
 
 @dataclass
@@ -39,14 +37,14 @@ class ExtractionResult:
 
     Attributes:
         field_name: The unique snake_case name of the checklist field.
-        found: True if any keyword for the field was detected in the text; False otherwise.
+        status: Detection status: 'found', 'negated', or 'missing'.
         matched_keyword: The checklist keyword string that triggered the match, or None.
         matched_context: A short text snippet (~40 characters before and after the keyword)
             serving as clinical documentation evidence, or None.
     """
 
     field_name: str
-    found: bool
+    status: str
     matched_keyword: str | None
     matched_context: str | None
 
@@ -54,10 +52,11 @@ class ExtractionResult:
 def extract_fields(
     note_text: str, fields: list[ChecklistField], context_window: int = 40
 ) -> list[ExtractionResult]:
-    """Extracts presence of checklist fields from clinical note text using keyword matching.
+    """Extracts presence or negation of checklist fields from clinical note text.
 
     Performs case-insensitive search for keywords defined in each ChecklistField.
-    Matching halts upon the first matched keyword per field.
+    Matching halts upon the first matched keyword per field, which is then evaluated
+    by the negation detection heuristic.
 
     Args:
         note_text: Raw clinical note text string.
@@ -92,10 +91,14 @@ def extract_fields(
                 if ctx_end < len(note_text):
                     snippet = f"{snippet}..."
 
+                # Determine if the finding is negated or affirmed
+                negated = is_negated(note_text, start_idx)
+                status = "negated" if negated else "found"
+
                 results.append(
                     ExtractionResult(
                         field_name=field.field_name,
-                        found=True,
+                        status=status,
                         matched_keyword=kw,
                         matched_context=snippet,
                     )
@@ -106,7 +109,7 @@ def extract_fields(
             results.append(
                 ExtractionResult(
                     field_name=field.field_name,
-                    found=False,
+                    status="missing",
                     matched_keyword=None,
                     matched_context=None,
                 )
@@ -117,12 +120,12 @@ def extract_fields(
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("CLARITY - EXTRACTOR DEMONSTRATION & LIMITATION ANALYSIS")
+    print("CLARITY - EXTRACTOR WITH NEGATION DETECTION DEMONSTRATION")
     print("=" * 80)
 
     checklist = load_checklist("chest_pain")
 
-    # Focus on radiation and associated symptoms for clean comparison
+    # Focus on radiation, character, and associated symptoms for clean comparison
     target_fields = [
         f for f in checklist if f.field_name in ("pain_radiation", "pain_character", "associated_anginal_symptoms")
     ]
@@ -145,26 +148,22 @@ if __name__ == "__main__":
     print(f"Note: \"{note_affirmative}\"\n")
     results_affirmative = extract_fields(note_affirmative, target_fields)
     for res in results_affirmative:
-        status = "[FOUND]" if res.found else "[MISSING]"
-        print(f"{status:10} Field: {res.field_name}")
-        print(f"           Matched Keyword : {res.matched_keyword}")
-        print(f"           Context Snippet : {res.matched_context}")
+        print(f"[{res.status.upper():7}] Field: {res.field_name}")
+        print(f"          Matched Keyword : {res.matched_keyword}")
+        print(f"          Context Snippet : {res.matched_context}")
 
     print("\n" + "-" * 80)
-    print("--- TEST NOTE 2: NEGATED DOCUMENTATION (KNOWN LIMITATION DEMO) ---")
+    print("--- TEST NOTE 2: NEGATED DOCUMENTATION (NEGATION HANDLING DEMO) ---")
     print(f"Note: \"{note_negated}\"\n")
     results_negated = extract_fields(note_negated, target_fields)
     for res in results_negated:
-        status = "[FOUND]" if res.found else "[MISSING]"
-        print(f"{status:10} Field: {res.field_name}")
-        print(f"           Matched Keyword : {res.matched_keyword}")
-        print(f"           Context Snippet : {res.matched_context}")
+        print(f"[{res.status.upper():7}] Field: {res.field_name}")
+        print(f"          Matched Keyword : {res.matched_keyword}")
+        print(f"          Context Snippet : {res.matched_context}")
 
     print("\n" + "=" * 80)
-    print("CRITICAL OBSERVATION ON NEGATION:")
-    print("Notice how in Note 2, the note states 'Patient denies radiation to left arm'")
-    print("and 'without diaphoresis'. However, because this rule-based extractor")
-    print("performs simple keyword matching without negation parsing, it flags both")
-    print("as FOUND (False Positives for presence of the symptom).")
-    print("This confirms the design specification and documents the exact limitation.")
+    print("OBSERVATION:")
+    print("With negation detection enabled, symptoms like 'radiation to left arm'")
+    print("and 'diaphoresis' in Note 2 are now accurately classified as [NEGATED]")
+    print("instead of false-positive [FOUND]!")
     print("=" * 80)
