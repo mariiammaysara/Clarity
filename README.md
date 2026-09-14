@@ -43,13 +43,17 @@ In acute and emergency care, incomplete clinical documentation can delay proper 
 
 ## Key Capabilities
 
-- 🩺 **Guideline-Grounded Checklists**: Audits notes against official clinical standards:
+- **Guideline-Grounded Checklists**: Audits clinical notes against official medical standards:
   - **2021 AHA/ACC Guidelines** for acute chest pain.
   - **SNNOOP10 Red Flags** for acute headache.
-- 🔍 **Smart Negation Detection**: Accurately catches denied symptoms (e.g., *"denies shortness of breath"*, *"no jaw pain"*), ensuring documented negatives are not misclassified as omissions.
-- ⚖️ **Weighted Scoring**: Assigns higher priority to urgent, life-threatening items (`HIGH` = 2 pts, e.g., ECG, troponin) over routine background elements (`MEDIUM` = 1 pt).
-- ⚡ **Fast & Deterministic**: Runs locally in $<10\text{ ms}$ with reproducible results—no GPUs, external APIs, or heavy ML models required.
-- 🖥️ **Interactive Streamlit UI**: A clean, dark-mode dashboard built entirely with Streamlit for fast, real-time clinical review.
+
+- **Smart Negation Detection**: Accurately catches denied symptoms (e.g., *"denies shortness of breath"*, *"no jaw pain"*), ensuring documented negatives are not misclassified as omissions.
+
+- **Weighted Clinical Scoring**: Assigns higher priority to urgent, life-threatening items (`HIGH` = 2 pts, e.g., ECG, troponin) over routine background elements (`MEDIUM` = 1 pt).
+
+- **Fast & Deterministic**: Runs locally in $<10\text{ ms}$ with reproducible results—no GPUs, external APIs, or heavy ML models required.
+
+- **Interactive Streamlit UI**: A clean, dark-mode dashboard built entirely with Streamlit for fast, real-time clinical review.
 
 ---
 
