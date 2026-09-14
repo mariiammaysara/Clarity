@@ -241,8 +241,8 @@ def print_evaluation_report(results: dict[str, Any]) -> None:
     if not mismatches:
         print("  [✓] Perfect 100% agreement between extractor and ground truth!\n")
     else:
-        # Display top mismatches (up to 10 for complete clinical visibility)
-        display_count = min(10, len(mismatches))
+        # Display top mismatches (up to 5 as requested for focused error analysis)
+        display_count = min(5, len(mismatches))
         print(f"Displaying top {display_count} discrepancies for error analysis:\n")
 
         for idx, m in enumerate(mismatches[:display_count], 1):

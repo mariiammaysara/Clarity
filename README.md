@@ -1,26 +1,24 @@
 <div align="center">
 
-# Clarity — Clinical Documentation Integrity Auditor
+# Clarity
+**Clinical Documentation Integrity & Guideline Audit Engine**
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://clarity-3sdzzb4ebw9kkq92j7x5dq.streamlit.app)
-[![Pytest](https://img.shields.io/badge/Pytest-12%20Passed-009688?style=flat-square&logo=pytest&logoColor=white)](https://docs.pytest.org/)
-[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
-[![Architecture](https://img.shields.io/badge/Architecture-Deterministic%20%7C%20Zero--Inference-success?style=flat-square)]()
+<p>
+  An evidence-based clinical documentation integrity engine that audits free-text medical records against authoritative clinical society guidelines to detect documentation omissions without diagnosing patients.
+</p>
 
-<br/>
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-0f172a?style=flat-square&logo=python&logoColor=cbd5e1)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-1e293b?style=flat-square&logo=streamlit&logoColor=cbd5e1)](https://clarity-3sdzzb4ebw9kkq92j7x5dq.streamlit.app)
+[![Tests Passing](https://img.shields.io/badge/Tests-12%20Passing-334155?style=flat-square&logo=pytest&logoColor=cbd5e1)](https://docs.pytest.org/)
+[![Architecture](https://img.shields.io/badge/Architecture-Deterministic%20%7C%20Zero--Inference-1e293b?style=flat-square)]()
+[![License](https://img.shields.io/badge/License-MIT-0f172a?style=flat-square)](LICENSE)
 
-**An evidence-based clinical documentation integrity engine that audits free-text medical records against authoritative clinical society guidelines to detect documentation omissions without diagnosing patients — [Live Demo ↗](https://clarity-3sdzzb4ebw9kkq92j7x5dq.streamlit.app)**
+<p>
+  <strong><a href="https://clarity-3sdzzb4ebw9kkq92j7x5dq.streamlit.app" target="_blank" rel="noopener noreferrer">Live Demo ↗</a></strong>
+</p>
 
-<br/>
-
-[Features](#key-capabilities) • [Guidelines](#codified-clinical-guidelines) • [Scoring Engine](#audit--scoring-methodology) • [Architecture](#system-architecture) • [Quickstart](#quickstart)
-
-<br/>
-<br/>
-
-<a href="https://clarity-3sdzzb4ebw9kkq92j7x5dq.streamlit.app">
-  <img src="assets/clarity_dashboard.png" alt="Clarity Clinical Documentation Integrity Auditor Interface" width="750" />
+<a href="https://clarity-3sdzzb4ebw9kkq92j7x5dq.streamlit.app" target="_blank" rel="noopener noreferrer">
+  <img src="assets/clarity_dashboard.png" alt="Clarity Clinical Documentation Integrity Auditor Interface" width="760" style="border: 1px solid #1e293b; border-radius: 10px; max-width: 100%; height: auto;" />
 </a>
 
 </div>
