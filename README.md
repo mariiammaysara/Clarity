@@ -30,6 +30,23 @@
 
 ---
 
+## Table of Contents
+
+- [Executive Overview](#executive-overview)
+- [Key Capabilities](#key-capabilities)
+- [Codified Clinical Guidelines](#codified-clinical-guidelines)
+- [Audit & Scoring Methodology](#audit--scoring-methodology)
+- [System Architecture](#system-architecture)
+- [Quickstart](#quickstart)
+- [Benchmark Clinical Scenarios](#benchmark-clinical-scenarios)
+- [Design Decisions](#design-decisions)
+- [Evaluation](#evaluation)
+- [Known Limitations](#known-limitations)
+- [Technical Stack](#technical-stack)
+- [License](#license)
+
+---
+
 ## Executive Overview
 
 In acute and emergency care, incomplete clinical documentation can delay proper diagnosis and create patient safety risks. While Large Language Models (LLMs) are often suggested for clinical text, their hallucinations, unpredictable latency, and high costs make them unreliable for strict audit compliance.
