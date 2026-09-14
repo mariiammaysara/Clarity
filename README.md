@@ -263,7 +263,7 @@ Clarity was evaluated across 6 standardized clinical notes (60 total checkpoints
 
 ### 3. Phrasing Variations & Synonym Narrowness
 - **Constraint**: Fixed keyword lists generate false negatives when clinicians document findings using non-standard phrasing.
-- **Clinical Example**: In *"Pain Radiation Pattern"*, the extractor matches `"radiation to left arm"` but may miss disjoint formulations like `"radiating intermittently toward the left arm"`.
+- **Clinical Example**: During manual testing, the extractor failed to match three real clinical phrasings of the same finding: `"left arm radiation"`, `"radiation to left arm"`, and `"radiating...to the left arm"` — despite all three describing the identical clinical fact.
 - **Future Direction**: Expanding keyword taxonomies using standardized medical ontologies (e.g., SNOMED CT or UMLS).
 
 ### 4. Documentation Completeness vs. Clinical Truth
