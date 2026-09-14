@@ -51,7 +51,7 @@ In emergency and acute outpatient settings, incomplete clinical documentation re
 - 🔍 **Clause-Bounded Clinical Negation Detection**: Implements a localized sliding-window heuristic that isolates negated observations (e.g., *"denies shortness of breath"*, *"no radiation to jaw"*), preventing documented absences from being misclassified as missing documentation while excluding them from affirmative points.
 - ⚖️ **Weighted Clinical Risk Scoring**: Prioritizes life-threatening parameters (`HIGH` priority = 2 points, e.g., ECG or troponin in acute chest pain) over routine historical elements (`MEDIUM` priority = 1 point).
 - ⚡ **Zero-Inference Footprint**: Runs locally with 100% deterministic reproducibility in $<10\text{ ms}$, requiring no GPU hardware, external APIs, or heavy ML dependencies.
-- 🖥️ **Production-Grade Next.js/shadcn Aesthetic**: Built with a sleek dark dashboard featuring monospace typography, high-contrast clinical indicators, and responsive alignment.
+- 🖥️ **Modern Clinical Dashboard Interface**: Built with a sleek dark theme featuring monospace typography, high-contrast clinical status indicators, and responsive layout via Streamlit.
 
 ---
 
@@ -64,32 +64,32 @@ Clarity stores its knowledge bases in structured, version-controlled JSON (`data
 
 | Parameter | Priority | Weight | Clinical Rationale & Guideline Citation |
 | :--- | :---: | :---: | :--- |
-| **Pain Character** | `HIGH` | 2 pts | Distinguishes ischemic (pressure/tightness) from non-ischemic etiologies. *(AHA/ACC 2021, Sec 4.1.1)* |
-| **Pain Location & Radiation** | `HIGH` | 2 pts | Radiation to neck, jaw, or arms significantly elevates Acute Coronary Syndrome likelihood. *(AHA/ACC 2021, Sec 4.1.2)* |
-| **Onset & Acuity** | `HIGH` | 2 pts | Abrupt 'thunderclap' or tearing onset flags aortic dissection. *(AHA/ACC 2021, Sec 4.1.3)* |
-| **Electrocardiogram (ECG)** | `HIGH` | 2 pts | Mandatory within 10 minutes of presentation to detect STEMI. *(AHA/ACC 2021, Sec 4.2.1)* |
-| **Cardiac Biomarkers (Troponin)** | `HIGH` | 2 pts | Essential to confirm or exclude acute myocardial injury. *(AHA/ACC 2021, Sec 4.2.2)* |
-| **Associated Symptoms** | `MEDIUM` | 1 pt | Diaphoresis, dyspnea, nausea are secondary anginal equivalents. *(AHA/ACC 2021, Sec 4.1.4)* |
-| **Provoking / Relieving Factors**| `MEDIUM` | 1 pt | Exertional aggravation or rest relief guides ischemic vs pleuritic etiology. *(AHA/ACC 2021, Sec 4.1.5)* |
-| **Vital Signs** | `MEDIUM` | 1 pt | Hemodynamic stability directly governs triage priority. *(AHA/ACC 2021, Sec 3.1)* |
-| **Cardiovascular Risk Factors** | `MEDIUM` | 1 pt | Hypertension, diabetes, smoking, hyperlipidemia inform pre-test probability. *(AHA/ACC 2021, Sec 4.3)* |
-| **Prior Cardiac History** | `MEDIUM` | 1 pt | Known CAD, prior PCI/CABG markedly shifts clinical suspicion. *(AHA/ACC 2021, Sec 4.3)* |
+| **Pain Character** | `HIGH` | 2 pts | Distinguishes ischemic (pressure/tightness) from non-ischemic etiologies. *(2021 AHA/ACC Chest Pain Guideline)* |
+| **Pain Location & Radiation** | `HIGH` | 2 pts | Radiation to neck, jaw, or arms significantly elevates Acute Coronary Syndrome likelihood. *(2021 AHA/ACC Chest Pain Guideline)* |
+| **Onset & Acuity** | `HIGH` | 2 pts | Abrupt 'thunderclap' or tearing onset flags aortic dissection. *(2021 AHA/ACC Chest Pain Guideline)* |
+| **Electrocardiogram (ECG)** | `HIGH` | 2 pts | Mandatory within 10 minutes of presentation to detect STEMI. *(2021 AHA/ACC Chest Pain Guideline)* |
+| **Cardiac Biomarkers (Troponin)** | `HIGH` | 2 pts | Essential to confirm or exclude acute myocardial injury. *(2021 AHA/ACC Chest Pain Guideline)* |
+| **Associated Symptoms** | `MEDIUM` | 1 pt | Diaphoresis, dyspnea, nausea are secondary anginal equivalents. *(2021 AHA/ACC Chest Pain Guideline)* |
+| **Provoking / Relieving Factors**| `MEDIUM` | 1 pt | Exertional aggravation or rest relief guides ischemic vs pleuritic etiology. *(2021 AHA/ACC Chest Pain Guideline)* |
+| **Vital Signs** | `MEDIUM` | 1 pt | Hemodynamic stability directly governs triage priority. *(2021 AHA/ACC Chest Pain Guideline)* |
+| **Cardiovascular Risk Factors** | `MEDIUM` | 1 pt | Hypertension, diabetes, smoking, hyperlipidemia inform pre-test probability. *(2021 AHA/ACC Chest Pain Guideline)* |
+| **Prior Cardiac History** | `MEDIUM` | 1 pt | Known CAD, prior PCI/CABG markedly shifts clinical suspicion. *(2021 AHA/ACC Chest Pain Guideline)* |
 
 ### 2. Acute Headache (`headache`)
 *Source: SNNOOP10 Headache Red Flag Criteria (International Headache Society & consensus guidelines).*
 
 | Parameter | Priority | Weight | Clinical Rationale & Guideline Citation |
 | :--- | :---: | :---: | :--- |
-| **Onset & Speed (Thunderclap)** | `HIGH` | 2 pts | Reaching peak within 1 minute mandates immediate exclusion of Subarachnoid Hemorrhage. *(SNNOOP10 - O)* |
-| **Systemic Symptoms (Fever/Weight)**| `HIGH` | 2 pts | Suggests meningitis, encephalitis, or giant cell arteritis. *(SNNOOP10 - S)* |
-| **Neurologic Deficits** | `HIGH` | 2 pts | Motor/sensory/cranial nerve deficits flag intracranial space-occupying lesions. *(SNNOOP10 - N)* |
-| **Neoplasm History** | `HIGH` | 2 pts | Significantly increases pre-test probability of brain metastasis. *(SNNOOP10 - N)* |
-| **Pain Character & Severity** | `MEDIUM` | 1 pt | Characterizes primary vs secondary presentation; 'worst headache of life'. *(SNNOOP10)* |
-| **Older Age at Onset (>50)** | `MEDIUM` | 1 pt | New headache onset in older adults raises concern for Giant Cell Arteritis or mass. *(SNNOOP10 - O)* |
-| **Postural / Positional Triggers**| `MEDIUM` | 1 pt | Positional variation indicates intracranial hypotension or hypertension. *(SNNOOP10 - P)* |
-| **Precipitated by Valsalva** | `MEDIUM` | 1 pt | Cough, bend, exertion onset indicates posterior fossa pathology or Chiari malformation. *(SNNOOP10 - P)* |
-| **Papilledema** | `MEDIUM` | 1 pt | Critical physical sign of elevated intracranial pressure. *(SNNOOP10 - P)* |
-| **Immunosuppression / HIV** | `MEDIUM` | 1 pt | High risk for opportunistic CNS infections and abscesses. *(SNNOOP10 - I)* |
+| **Onset & Speed (Thunderclap)** | `HIGH` | 2 pts | Reaching peak within 1 minute mandates immediate exclusion of Subarachnoid Hemorrhage. *(SNNOOP10 Headache Red Flags)* |
+| **Systemic Symptoms (Fever/Weight)**| `HIGH` | 2 pts | Suggests meningitis, encephalitis, or giant cell arteritis. *(SNNOOP10 Headache Red Flags)* |
+| **Neurologic Deficits** | `HIGH` | 2 pts | Motor/sensory/cranial nerve deficits flag intracranial space-occupying lesions. *(SNNOOP10 Headache Red Flags)* |
+| **Neoplasm History** | `HIGH` | 2 pts | Significantly increases pre-test probability of brain metastasis. *(SNNOOP10 Headache Red Flags)* |
+| **Pain Character & Severity** | `MEDIUM` | 1 pt | Characterizes primary vs secondary presentation; 'worst headache of life'. *(SNNOOP10 Headache Red Flags)* |
+| **Older Age at Onset (>50)** | `MEDIUM` | 1 pt | New headache onset in older adults raises concern for Giant Cell Arteritis or mass. *(SNNOOP10 Headache Red Flags)* |
+| **Postural / Positional Triggers**| `MEDIUM` | 1 pt | Positional variation indicates intracranial hypotension or hypertension. *(SNNOOP10 Headache Red Flags)* |
+| **Precipitated by Valsalva** | `MEDIUM` | 1 pt | Cough, bend, exertion onset indicates posterior fossa pathology or Chiari malformation. *(SNNOOP10 Headache Red Flags)* |
+| **Papilledema** | `MEDIUM` | 1 pt | Critical physical sign of elevated intracranial pressure. *(SNNOOP10 Headache Red Flags)* |
+| **Immunosuppression / HIV** | `MEDIUM` | 1 pt | High risk for opportunistic CNS infections and abscesses. *(SNNOOP10 Headache Red Flags)* |
 
 ---
 
@@ -100,8 +100,8 @@ Clarity stores its knowledge bases in structured, version-controlled JSON (`data
 2. **Clause-Bounded Negation Detection (`src/negation.py`):**
    - When a keyword matches, the preceding context window (up to 6 words) is inspected.
    - The scan is strictly bounded by clause boundaries (`.`, `!`, `?`, `;`, `\n`).
-   - Trigger dictionary contains 14 clinical negation patterns:
-     `"no", "not", "denies", "denied", "denying", "without", "negative", "rules out", "ruled out", "free of", "absent", "unremarkable", "non-", "never"`
+   - Trigger dictionary contains 9 clinical negation triggers:
+     `"denies", "denied", "denying", "no", "without", "negative for", "ruled out", "not", "absence of"`
 3. **Classification:**
    - **`found`**: Affirmatively documented in note $\rightarrow$ awards completeness points.
    - **`negated`**: Explicitly documented as absent/denied $\rightarrow$ tracked as a documented negative finding; does not award affirmative points.
@@ -123,17 +123,20 @@ Where:
 ```text
 Clarity/
 ├── data/
-│   └── checklists.json       # Guideline knowledge base (AHA/ACC, SNNOOP10) with versioning
+│   ├── checklists.json       # Guideline knowledge base (AHA/ACC, SNNOOP10) with versioning
+│   └── ground_truth.json     # Curated physician annotations for 60 clinical benchmark checkpoints
 ├── src/
 │   ├── checklist.py          # Typed dataclasses & JSON loader with schema validation
 │   ├── negation.py           # Clause-bounded clinical negation sliding-window detector
 │   ├── extractor.py          # Keyword matcher tracking status (found, negated, missing)
 │   ├── analyzer.py           # Weighted completeness calculation & audit report generation
+│   ├── evaluate.py           # Ground-truth benchmark evaluation & confusion matrix generator
 │   └── sample_notes.py       # 6 standardized clinical fixtures (complete, deficient, negated)
 ├── tests/
 │   ├── test_checklist.py     # Schema validation and condition registry unit tests
 │   ├── test_extractor.py     # Affirmative, negated, and absent extraction unit tests
-│   └── test_analyzer.py      # Mathematical scoring and deficit aggregation unit tests
+│   ├── test_analyzer.py      # Mathematical scoring and deficit aggregation unit tests
+│   └── test_evaluate.py      # Benchmark evaluation matrix verification unit tests
 ├── app.py                    # Interactive Streamlit clinical review dashboard
 ├── favicon.svg               # Custom monospace branded application favicon
 ├── requirements.txt          # Pinned dependency ranges for reproducible deployment
@@ -184,24 +187,14 @@ pip install -r requirements.txt
 
 ### 2. Run Automated Test Suite
 
-All 9 test cases run in $<0.1\text{ s}$:
+All 12 test cases run in $<0.1\text{ s}$:
 
 ```bash
 pytest -v
 ```
 
 ```text
-tests/test_analyzer.py::test_analyzer_complete_note PASSED           [ 33%]
-tests/test_analyzer.py::test_analyzer_deficient_note PASSED          [ 44%]
-tests/test_analyzer.py::test_analyzer_negated_note PASSED            [ 55%]
-tests/test_checklist.py::test_load_checklist_valid_condition PASSED  [ 66%]
-tests/test_checklist.py::test_load_checklist_unknown_condition PASSED[ 77%]
-tests/test_checklist.py::test_list_conditions PASSED                [ 88%]
-tests/test_extractor.py::test_extractor_complete_note PASSED        [ 92%]
-tests/test_extractor.py::test_extractor_deficient_note PASSED       [ 96%]
-tests/test_extractor.py::test_extractor_negated_note PASSED         [100%]
-
-============================== 9 passed in 0.06s ==============================
+============================= 12 passed in 0.05s ==============================
 ```
 
 ### 3. Launch the Interactive Dashboard
@@ -228,7 +221,7 @@ python src/analyzer.py
 
 ### 5. Run Ground-Truth Benchmark Evaluation
 
-Validate the clinical extraction engine against curated physician ground-truth annotations across 60 clinical checkpoints:
+Run the manual benchmark evaluation against ground truth:
 
 ```bash
 python -m src.evaluate
@@ -251,19 +244,49 @@ Clarity includes 6 calibrated clinical fixtures in `src/sample_notes.py` represe
 
 ---
 
-## Engineering Design Principles
+## Design Decisions
 
-1. **Deterministic Over Stochastic**: In clinical auditing, consistency is paramount. Two runs on the exact same note will yield the exact same score and gap breakdown every time.
-2. **Zero Black-Box Dependencies**: Transparent keyword taxonomies mean every audit finding can be directly traced to specific characters and guideline citations.
-3. **Low Latency & High Portability**: Zero compilation or GPU prerequisites allow Clarity to run inside lightweight Docker containers, on microservices, or directly on clinical client machines.
-4. **Clean Decoupling**: Checklists (`data/`), data loading (`src/checklist.py`), extraction (`src/extractor.py`), negation (`src/negation.py`), and presentation (`app.py`) are fully isolated and independently testable.
+- **Rule-Based Engine Over Generative LLMs**: Prioritized deterministic, inspectable keyword extraction over black-box LLMs to ensure reproducible audits, instant execution speed (<10 ms), and zero external API dependencies or token costs.
+- **Weighted Clinical Scoring (HIGH = 2 pts, MEDIUM = 1 pt)**: Reflects acute clinical triage reality, where omitting critical life-threat rule-outs (e.g., troponin or ECG in acute coronary syndrome) carries far greater risk than background historical elements.
+- **Dedicated Clause-Bounded Negation (`src/negation.py`)**: Decouples negation detection from keyword searching, ensuring documented negative findings (e.g., *"denies radiation to left arm"*) do not earn completeness points while preventing them from being flagged as missing omissions.
+- **Zero Heavy NLP Frameworks**: Built using standard Python data structures and standard-library modules (`dataclasses`, `pathlib`, `re`, `json`) without PyTorch or spaCy overhead, ensuring maximum portability and transparency.
+
+---
+
+## Evaluation
+
+Clarity was evaluated across the 6 standardized clinical fixtures against a curated ground truth (`data/ground_truth.json`) manually reviewed and annotated by the project developer rather than synthetically generated:
+
+| Class / Metric | Precision | Recall | F1-Score | Support |
+| :--- | :---: | :---: | :---: | :---: |
+| **`found`** | **100.0%** | **88.2%** | **93.8%** | 17 |
+| **`negated`** | **100.0%** | **91.7%** | **95.7%** | 12 |
+| **`missing`** | **91.2%** | **100.0%** | **95.4%** | 31 |
+| **Overall Accuracy** | **95.00%** (57 / 60) | — | — | 60 |
+
+### Clinical Significance of Evaluation Metrics
+Achieving **100.0% Precision** on both `found` and `negated` classes signifies **zero false positives**—the auditor never erroneously reports an absent finding as present, nor does it misclassify an affirmed symptom as negated. Conversely, a **Recall below 100%** on these same classes (88.2% for `found`, 91.7% for `negated`) indicates occasional **false negatives** where clinical parameters documented in non-standard phrasing escape dictionary detection. In clinical documentation integrity audit, high precision is paramount to avoid offering clinicians false reassurance, while taxonomy expansion systematically eliminates remaining false negatives.
+
+Complete confusion matrix breakdowns and per-checkpoint error diagnostics are reproducible via:
+```bash
+python -m src.evaluate
+```
+
+---
+
+## Known Limitations
+
+1. **Heuristic Negation Scope**: Negation detection relies on a localized pre-negation word window (default: 6 words) bounded by sentence terminators. It does not perform full syntactic dependency parsing and cannot resolve post-negation (e.g., *"chest pain was denied"*) or complex double negations.
+2. **Keyword Substring Collisions**: Substring matching risks collisions when a short term is embedded within another compound phrase (for instance, the keyword `"pressure"` matching inside `"blood pressure"`).
+3. **Documentation Completeness vs. Clinical Truth**: Clarity verifies whether concepts were *written* in the note. It cannot judge clinical accuracy, verify whether diagnostic tests were performed correctly, or evaluate patient pathology.
+4. **Keyword Coverage Narrowness**: Finite keyword lists inherently generate false negatives when clinical information is documented using syntactic variations diverging from exact checklist entries. For instance, in testing of the *"Pain Radiation Pattern"* field, the rule-based extractor failed to match across three synonymous formulations of the same clinical finding (`"left arm radiation"` vs. `"radiation to left arm"` vs. `"radiating...to the left arm"`), representing an ongoing limitation in capturing uncodified syntactic phrasing.
 
 ---
 
 ## Technical Stack
 
 - **Language**: Python 3.10+ (Standard Library: `dataclasses`, `pathlib`, `typing`, `re`, `json`)
-- **Frontend Framework**: Streamlit (Custom Next.js/shadcn dark design system)
+- **Frontend Framework**: Streamlit (Custom dark healthtech theme with monospace typography)
 - **Testing & Quality Assurance**: pytest
 - **Version Control**: Git & GitHub
 
