@@ -8,9 +8,9 @@
 </p>
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-0f172a?style=flat-square&logo=python&logoColor=cbd5e1)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-1e293b?style=flat-square&logo=streamlit&logoColor=cbd5e1)](https://clarity-3sdzzb4ebw9kkq92j7x5dq.streamlit.app)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-1e293b?style=flat-square&logo=streamlit&logoColor=cbd5e1)](https://streamlit.io/)
 [![Tests Passing](https://img.shields.io/badge/Tests-12%20Passing-334155?style=flat-square&logo=pytest&logoColor=cbd5e1)](https://docs.pytest.org/)
-[![Architecture](https://img.shields.io/badge/Architecture-Deterministic%20%7C%20Zero--Inference-1e293b?style=flat-square)]()
+[![Architecture](https://img.shields.io/badge/Architecture-Deterministic%20%7C%20Zero--Inference-1e293b?style=flat-square)](#system-architecture)
 [![License](https://img.shields.io/badge/License-MIT-0f172a?style=flat-square)](LICENSE)
 
 <p>
